@@ -16,6 +16,9 @@ import AdminBookings from "./pages/AdminBookings";
 import AdminDestinations from "./pages/AdminDestinations";
 import AdminEvents from "./pages/AdminEvents";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminAttractions from "./pages/AdminAttractions";
+import DestinationDetails from "./pages/DestinationDetails";
+import AdminEditDestination from "./pages/AdminEditDestination";
 
 const App = () => {
   // Create a client
@@ -37,7 +40,10 @@ const App = () => {
                 <Route path="/admin/tours/new" element={<AdminNewTour />} />
                 <Route path="/admin/bookings" element={<AdminBookings />} />
                 <Route path="/admin/destinations" element={<AdminDestinations />} />
+                <Route path="/admin/destinations/edit/:id" element={<AdminEditDestination />} />
                 <Route path="/admin/events" element={<AdminEvents />} />
+                <Route path="/admin/attractions" element={<AdminAttractions />} />
+                <Route path="/destination/:id" element={<DestinationDetails />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

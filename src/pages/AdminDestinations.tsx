@@ -1,18 +1,41 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Trash2, Navigation, Pencil } from 'lucide-react';
+import { 
+  Plus, 
+  Trash2, 
+  Navigation, 
+  Pencil,
+  MapPin,
+  Upload
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { useDestinations, Destination } from '@/hooks/use-destinations';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface AdminDestinationsProps {
   inDashboard?: boolean;
 }
+
+const DISTRICTS = [
+  'Туркестан',
+  'Тюлькубас',
+  'Байдибек',
+  'Арыс',
+  'Кентау',
+  'Сайрам',
+  'Шардара'
+];
 
 const AdminDestinations: React.FC<AdminDestinationsProps> = ({ inDashboard = false }) => {
   const [formData, setFormData] = useState<{ [key: string]: Partial<Destination> }>({});
@@ -20,7 +43,9 @@ const AdminDestinations: React.FC<AdminDestinationsProps> = ({ inDashboard = fal
     name: '',
     description: '',
     image: '',
-    google_maps_url: ''
+    google_maps_url: '',
+    district: 'Туркестан',
+    audio_file: ''
   });
   const [showNewForm, setShowNewForm] = useState(false);
   const { toast } = useToast();
@@ -89,7 +114,7 @@ const AdminDestinations: React.FC<AdminDestinationsProps> = ({ inDashboard = fal
   const handleCreate = async () => {
     // Validate required fields
     if (!newDestination.name || !newDestination.description || 
-        !newDestination.image || !newDestination.google_maps_url) {
+        !newDestination.image || !newDestination.google_maps_url || !newDestination.district) {
       toast({
         title: "Ошибка",
         description: "Все поля обязательны для заполнения",
@@ -104,7 +129,9 @@ const AdminDestinations: React.FC<AdminDestinationsProps> = ({ inDashboard = fal
         name: '',
         description: '',
         image: '',
-        google_maps_url: ''
+        google_maps_url: '',
+        district: 'Туркестан',
+        audio_file: ''
       });
       setShowNewForm(false);
     }
@@ -116,6 +143,12 @@ const AdminDestinations: React.FC<AdminDestinationsProps> = ({ inDashboard = fal
 
   const handleTestGoogleMaps = (url: string) => {
     window.open(url, '_blank');
+  };
+
+  const handleTestAudio = (url: string) => {
+    if (url) {
+      window.open(url, '_blank');
+    }
   };
 
   if (isLoading) {
@@ -180,6 +213,23 @@ const AdminDestinations: React.FC<AdminDestinationsProps> = ({ inDashboard = fal
             </div>
             
             <div>
+              <label className="block text-sm font-medium mb-1">Район</label>
+              <Select
+                value={newDestination.district}
+                onValueChange={(value) => handleNewDestinationChange('district', value)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Выберите район" />
+                </SelectTrigger>
+                <SelectContent>
+                  {DISTRICTS.map((district) => (
+                    <SelectItem key={district} value={district}>{district}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
               <label className="block text-sm font-medium mb-1">URL изображения</label>
               <Input
                 value={newDestination.image}
@@ -204,6 +254,27 @@ const AdminDestinations: React.FC<AdminDestinationsProps> = ({ inDashboard = fal
                     className="flex items-center gap-1"
                   >
                     <Navigation className="h-4 w-4" /> Проверить
+                  </Button>
+                )}
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-1">Аудио файл (MP3 URL)</label>
+              <div className="flex gap-2">
+                <Input
+                  value={newDestination.audio_file || ''}
+                  onChange={(e) => handleNewDestinationChange('audio_file', e.target.value)}
+                  placeholder="https://example.com/audio.mp3"
+                  className="flex-1"
+                />
+                {newDestination.audio_file && (
+                  <Button
+                    variant="outline"
+                    onClick={() => handleTestAudio(newDestination.audio_file || '')}
+                    className="flex items-center gap-1"
+                  >
+                    <Upload className="h-4 w-4" /> Проверить
                   </Button>
                 )}
               </div>
@@ -257,6 +328,23 @@ const AdminDestinations: React.FC<AdminDestinationsProps> = ({ inDashboard = fal
               </div>
               
               <div>
+                <label className="block text-sm font-medium mb-1">Район</label>
+                <Select
+                  value={formData[destination.id]?.district || 'Туркестан'}
+                  onValueChange={(value) => handleInputChange(destination.id, 'district', value)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Выберите район" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {DISTRICTS.map((district) => (
+                      <SelectItem key={district} value={district}>{district}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
                 <label className="block text-sm font-medium mb-1">URL изображения</label>
                 <Input
                   value={formData[destination.id]?.image || ''}
@@ -279,6 +367,27 @@ const AdminDestinations: React.FC<AdminDestinationsProps> = ({ inDashboard = fal
                   >
                     <Navigation className="h-4 w-4" /> Тест
                   </Button>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-1">Аудио файл (MP3 URL)</label>
+                <div className="flex gap-2">
+                  <Input
+                    value={formData[destination.id]?.audio_file || ''}
+                    onChange={(e) => handleInputChange(destination.id, 'audio_file', e.target.value)}
+                    className="flex-1"
+                    placeholder="https://example.com/audio.mp3"
+                  />
+                  {formData[destination.id]?.audio_file && (
+                    <Button
+                      variant="outline"
+                      onClick={() => handleTestAudio(formData[destination.id]?.audio_file || '')}
+                      className="flex items-center gap-1"
+                    >
+                      <Upload className="h-4 w-4" /> Тест
+                    </Button>
+                  )}
                 </div>
               </div>
             </CardContent>

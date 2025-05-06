@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      attractions: {
+        Row: {
+          category_id: number
+          created_at: string
+          description: string
+          id: string
+          image: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category_id: number
+          created_at?: string
+          description: string
+          id?: string
+          image: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category_id?: number
+          created_at?: string
+          description?: string
+          id?: string
+          image?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           created_at: string | null
@@ -41,21 +71,30 @@ export type Database = {
       }
       destinations: {
         Row: {
+          audio_file: string | null
           description: string
+          detailed_info: string | null
+          district: string | null
           google_maps_url: string
           id: number
           image: string
           name: string
         }
         Insert: {
+          audio_file?: string | null
           description: string
+          detailed_info?: string | null
+          district?: string | null
           google_maps_url: string
           id?: number
           image: string
           name: string
         }
         Update: {
+          audio_file?: string | null
           description?: string
+          detailed_info?: string | null
+          district?: string | null
           google_maps_url?: string
           id?: number
           image?: string

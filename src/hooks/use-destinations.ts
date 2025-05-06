@@ -9,6 +9,9 @@ export interface Destination {
   description: string;
   image: string;
   google_maps_url: string;
+  district: string;
+  detailed_info?: string;
+  audio_file?: string;
 }
 
 export const useDestinations = () => {

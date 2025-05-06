@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Calendar, MapPin, Compass, LayoutDashboard } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, Compass, LayoutDashboard, Landmark } from 'lucide-react';
 
 const AdminDashboard = () => {
   const { toast } = useToast();
@@ -57,6 +57,12 @@ const AdminDashboard = () => {
       path: "/admin/destinations"
     },
     {
+      title: "Достопримечательности",
+      description: "Управление достопримечательностями",
+      icon: Landmark,
+      path: "/admin/attractions"
+    },
+    {
       title: "Бронирования",
       description: "Просмотр и управление бронированиями",
       icon: LayoutDashboard,
@@ -79,7 +85,7 @@ const AdminDashboard = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {adminPages.map((page) => (
             <Card 
               key={page.path} 

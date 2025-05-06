@@ -9,7 +9,7 @@ const Hero = () => {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://informburo.kz/storage/photos/204/main/MlApWb8tuKVg8PwEAkGp0GYIvzGjlw9fFt1utVy5.jpg"
+          src="https://static.tengrinews.kz/userdata/news/2025/news_567172/thumb_b/photo_507597.jpeg"
           alt="Туркестан"
           className="w-full h-full object-cover"
         />
